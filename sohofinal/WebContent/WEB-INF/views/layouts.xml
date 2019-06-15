@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+
+<!-- main 화면 -->
+<definition name="main.tiles" template="/WEB-INF/views/layouts-tiles.jsp">
+	<put-attribute name="header" value="/WEB-INF/views/common/header.jsp"/>
+	<put-attribute name="bbstop" value=""/>
+	<put-attribute name="top_inc" value="/WEB-INF/views/common/top.jsp"/>
+	<put-attribute name="main" value="/WEB-INF/views/main/main.jsp"/>
+	<put-attribute name="bottom_inc" value="/WEB-INF/views/common/bottom.jsp"/>
+	
+</definition>
+
+<!-- 펜션 소개 -->
+<definition name="prologue.tiles" extends="main.tiles">
+	<put-attribute name="main" value="/WEB-INF/views/intro/prologue.jsp"/>
+</definition>
+
+<!-- 펜션 전경 -->
+<definition name="pensionView.tiles" extends="main.tiles">
+	<put-attribute name="main" value="/WEB-INF/views/intro/pensionView.jsp"/>
+</definition>
+
+<!-- login 화면 -->
+<definition name="login.tiles" extends="main.tiles" >
+<put-attribute name="main" value="/WEB-INF/views/login/login.jsp"/>
+</definition>
+
+<!-- regi 화면 -->
+<definition name="regi.tiles" extends="main.tiles" >
+<put-attribute name="main" value="/WEB-INF/views/login/regi.jsp"/>
+</definition>
+
+<!-- mypage -->
+<definition name="mypage.tiles" extends="main.tiles" >
+<put-attribute name="main" value="/WEB-INF/views/my/mypage.jsp"/>
+</definition>
+
+<!-- 정보수정 -->
+<definition name="myup.tiles" extends="main.tiles" >
+<put-attribute name="main" value="/WEB-INF/views/my/myUpdate.jsp"/>
+</definition>
+
+<!-- 비밀번호변경 -->
+<definition name="pwdup.tiles" extends="main.tiles" >
+<put-attribute name="main" value="/WEB-INF/views/my/myPwdUpdate.jsp"/>
+</definition>
+
+<!-- 회원탈퇴 -->
+<definition name="deleteMypage.tiles" extends="main.tiles" >
+<put-attribute name="main" value="/WEB-INF/views/my/deleteMypage.jsp"/>
+</definition>
+
+<!-- rbbs -->
+<definition name="rbbslist.tiles"  extends="main.tiles">
+	
+	<put-attribute name="bbstop" value="/WEB-INF/views/rbbs/rbbstop.jsp"/>
+	<put-attribute name="main" value="/WEB-INF/views/rbbs/rbbslist.jsp"/>
+</definition>
+
+<definition name="rbbsOne.tiles"  extends="main.tiles">
+	
+	<put-attribute name="bbstop" value="/WEB-INF/views/rbbs/rbbstop.jsp"/>
+	<put-attribute name="main" value="/WEB-INF/views/rbbs/rbbsn1.jsp"/>
+</definition>
+
+<definition name="rbbsTwo.tiles"  extends="main.tiles">
+	
+	<put-attribute name="bbstop" value="/WEB-INF/views/rbbs/rbbstop.jsp"/>
+	<put-attribute name="main" value="/WEB-INF/views/rbbs/rbbsn2.jsp"/>
+</definition>
+
+<definition name="rbbsThree.tiles"  extends="main.tiles">
+	
+	<put-attribute name="bbstop" value="/WEB-INF/views/rbbs/rbbstop.jsp"/>
+	<put-attribute name="main" value="/WEB-INF/views/rbbs/rbbsn3.jsp"/>
+</definition>
+
+<definition name="rbbsFour.tiles"  extends="main.tiles">
+	
+	<put-attribute name="bbstop" value="/WEB-INF/views/rbbs/rbbstop.jsp"/>
+	<put-attribute name="main" value="/WEB-INF/views/rbbs/rbbsn4.jsp"/>
+</definition>
+
+<definition name="rbbsFive.tiles"  extends="main.tiles">
+	
+	<put-attribute name="bbstop" value="/WEB-INF/views/rbbs/rbbstop.jsp"/>
+	<put-attribute name="main" value="/WEB-INF/views/rbbs/rbbsn5.jsp"/>
+</definition>
+
+<definition name="rbbsSix.tiles"  extends="main.tiles">
+	
+	<put-attribute name="bbstop" value="/WEB-INF/views/rbbs/rbbstop.jsp"/>
+	<put-attribute name="main" value="/WEB-INF/views/rbbs/rbbsn6.jsp"/>
+</definition>
+
+<!-- map -->
+<definition name="map.tiles"  extends="main.tiles">
+	
+	<put-attribute name="main" value="/WEB-INF/views/view/map.jsp"/>
+</definition>
+
+<definition name="nearlist.tiles"  extends="main.tiles">
+	
+	<put-attribute name="bbstop" value="/WEB-INF/views/near/neartop.jsp"/>
+	<put-attribute name="main" value="/WEB-INF/views/near/nearlist.jsp"/>
+</definition>
+
+<definition name="nearyong.tiles"  extends="main.tiles">
+	
+	<put-attribute name="bbstop" value="/WEB-INF/views/near/neartop.jsp"/>
+	<put-attribute name="main" value="/WEB-INF/views/near/nearyong.jsp"/>
+</definition>
+
+<definition name="nearse.tiles"  extends="main.tiles">
+	
+	<put-attribute name="bbstop" value="/WEB-INF/views/near/neartop.jsp"/>
+	<put-attribute name="main" value="/WEB-INF/views/near/nearse.jsp"/>
+</definition>
+
+<definition name="neardo.tiles"  extends="main.tiles">
+	
+	<put-attribute name="bbstop" value="/WEB-INF/views/near/neartop.jsp"/>
+	<put-attribute name="main" value="/WEB-INF/views/near/neardo.jsp"/>
+</definition>
+
+<!-- ebbs -->
+<definition name="Ebbslist.tiles" extends="main.tiles">
+	<put-attribute name="main" value="/WEB-INF/views/ebbs/ebbslist.jsp"/>
+</definition>
+
+<definition name="Ebbswrite.tiles" extends="main.tiles">
+	<put-attribute name="main" value="/WEB-INF/views/ebbs/ebbswrite.jsp"/>
+</definition>
+
+<definition name="Ebbsdetail.tiles" extends="main.tiles">
+	<put-attribute name="main" value="/WEB-INF/views/ebbs/ebbsdetail.jsp"/>
+</definition>
+
+<definition name="Ebbsupdate.tiles" extends="main.tiles">
+	<put-attribute name="main" value="/WEB-INF/views/ebbs/ebbsupdate.jsp"/>
+</definition>
+
+
+
+<!-- pds 화면 -->
+<definition name="pdslist.tiles" extends="main.tiles">
+	<put-attribute name="bbstop" value="/WEB-INF/views/pds/pdstop.jsp"/>
+	<put-attribute name="main" value="/WEB-INF/views/pds/pdslist.jsp"/>
+</definition>
+
+<definition name="pdswrite.tiles" extends="main.tiles">
+	<put-attribute name="bbstop" value="/WEB-INF/views/pds/pdstop.jsp"/>
+	<put-attribute name="main" value="/WEB-INF/views/pds/pdswrite.jsp"/>
+</definition>
+
+<definition name="pdsdetail.tiles" extends="main.tiles">
+	<put-attribute name="bbstop" value="/WEB-INF/views/pds/pdstop.jsp"/>
+	<put-attribute name="main" value="/WEB-INF/views/pds/pdsdetail.jsp"/>
+</definition>
+
+<definition name="pdsupdate.tiles" extends="main.tiles">
+	<put-attribute name="bbstop" value="/WEB-INF/views/pds/pdstop.jsp"/>
+	<put-attribute name="main" value="/WEB-INF/views/pds/pdsupdate.jsp"/>
+</definition>
+
+
+
+<!-- qbbs -->
+<definition name="Qbbslist.tiles"  extends="main.tiles">	
+	<put-attribute name="bbstop" value="/WEB-INF/views/qbbs/Qbbstop.jsp"/>
+	<put-attribute name="main" value="/WEB-INF/views/qbbs/Qbbslist.jsp"/>
+</definition>
+
+<definition name="Qbbswrite.tiles"  extends="main.tiles">	
+	<put-attribute name="bbstop" value="/WEB-INF/views/qbbs/Qbbstop.jsp"/>
+	<put-attribute name="main" value="/WEB-INF/views/qbbs/Qbbswrite.jsp"/>
+</definition>
+
+<definition name="Qbbsdetail.tiles"  extends="main.tiles">	
+	<put-attribute name="bbstop" value="/WEB-INF/views/qbbs/Qbbstop.jsp"/>
+	<put-attribute name="main" value="/WEB-INF/views/qbbs/Qbbsdetail.jsp"/>
+</definition>
+
+
+<definition name="Qbbsupdate.tiles"  extends="main.tiles">	
+	<put-attribute name="bbstop" value="/WEB-INF/views/qbbs/Qbbstop.jsp"/>
+	<put-attribute name="main" value="/WEB-INF/views/qbbs/Qbbsupdate.jsp"/>
+</definition>
+
+
+<definition name="Qbbsdelete.tiles"  extends="main.tiles">	
+	<put-attribute name="bbstop" value="/WEB-INF/views/qbbs/Qbbstop.jsp"/>
+	<put-attribute name="main" value="/WEB-INF/views/qbbs/Qbbsdelete.jsp"/>
+</definition>
+
+<definition name="Qanswer.tiles"  extends="main.tiles">	
+	<put-attribute name="bbstop" value="/WEB-INF/views/qbbs/Qbbstop.jsp"/>
+	<put-attribute name="main" value="/WEB-INF/views/qbbs/Qanswer.jsp"/>
+</definition>
+
+<!-- 부대시설 -->
+<definition name="boo.tiles" extends="main.tiles">
+	<put-attribute name="main" value="/WEB-INF/views/view/boo.jsp"/>
+</definition>
+
+
+<!-- nbbs(공지사항 게시판) -->
+<definition name="nbbslist.tiles" extends="main.tiles">
+	<put-attribute name="bbstop" value="/WEB-INF/views/nbbs/nbbstop.jsp"/>
+	<put-attribute name="main" value="/WEB-INF/views/nbbs/nbbslist.jsp"/>
+</definition>
+
+<definition name="nbbsupload.tiles" extends="main.tiles">
+	<put-attribute name="bbstop" value="/WEB-INF/views/nbbs/nbbstop.jsp"/>
+	<put-attribute name="main" value="/WEB-INF/views/nbbs/nbbsupload.jsp"/>
+</definition>
+
+<definition name="nbbsuploadError.tiles" extends="main.tiles">
+	<put-attribute name="bbstop" value="/WEB-INF/views/nbbs/nbbstop.jsp"/>
+	<put-attribute name="main" value="/WEB-INF/views/nbbs/nbbsuploadError.jsp"/>
+</definition>
+
+<definition name="nbbsdetail.tiles" extends="main.tiles">
+	<put-attribute name="bbstop" value="/WEB-INF/views/nbbs/nbbstop.jsp"/>
+	<put-attribute name="main" value="/WEB-INF/views/nbbs/nbbsdetail.jsp"/>
+</definition>
+
+<definition name="nbbsupdate.tiles" extends="main.tiles">
+	<put-attribute name="bbstop" value="/WEB-INF/views/nbbs/nbbstop.jsp"/>
+	<put-attribute name="main" value="/WEB-INF/views/nbbs/nbbsupdate.jsp"/>
+</definition>
+
+<definition name="nbbsdelete.tiles" template="/WEB-INF/views/nbbs/nbbsdelete.jsp"/>
+
+<definition name="nbbsdeleteError.tiles" extends="main.tiles">
+	<put-attribute name="bbstop" value="/WEB-INF/views/nbbs/nbbstop.jsp"/>
+	<put-attribute name="main" value="/WEB-INF/views/nbbs/nbbsdeleteError.jsp"/>
+</definition>
+
+
+<!-- poll -->
+<definition name="polllist.tiles" extends="main.tiles">
+	<put-attribute name="bbstop" value="/WEB-INF/views/poll/polltop.jsp"/>
+	<put-attribute name="main" value="/WEB-INF/views/poll/polllist.jsp"/>
+</definition>
+
+<definition name="pollmake.tiles" extends="main.tiles">
+	<put-attribute name="bbstop" value="/WEB-INF/views/poll/polltop.jsp"/>
+	<put-attribute name="main" value="/WEB-INF/views/poll/pollmake.jsp"/>
+</definition>
+
+<definition name="polldetail.tiles" extends="main.tiles">
+	<put-attribute name="bbstop" value="/WEB-INF/views/poll/polltop.jsp"/>
+	<put-attribute name="main" value="/WEB-INF/views/poll/polldetail.jsp"/>
+</definition>
+
+<definition name="pollresult.tiles" extends="main.tiles">
+	<put-attribute name="bbstop" value="/WEB-INF/views/poll/polltop.jsp"/>
+	<put-attribute name="main" value="/WEB-INF/views/poll/pollresult.jsp"/>
+</definition>
+
+<!-- booking -->
+<definition name="Bookinglist.tiles" extends="main.tiles">
+	<put-attribute name="main" value="/WEB-INF/views/booking/Bookinglist.jsp"/>
+</definition>
+
+<definition name="Bookingwrite.tiles" extends="main.tiles">
+	<put-attribute name="main" value="/WEB-INF/views/booking/Bookingwrite.jsp"/>
+</definition>
+
+<definition name="Bookingdetail.tiles" extends="main.tiles">
+	<put-attribute name="main" value="/WEB-INF/views/booking/Bookingdetail.jsp"/>
+</definition>
+
+</tiles-definitions>

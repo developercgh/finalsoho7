@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="ShEbbs">
+
+<select id="getEbbsList" resultType="sh.model.ShEbbsDto">
+	SELECT SEQ, ID, TITLE, CONTENT, FILENAME, READCOUNT, DOWNCOUNT, WDATE
+	FROM SH_EBBS
+	ORDER BY SEQ DESC
+</select>
+
+<insert id="uploadEbbs" parameterType="sh.model.ShEbbsDto">
+INSERT INTO SH_EBBS(SEQ, ID, TITLE, CONTENT, FILENAME, READCOUNT, DOWNCOUNT, WDATE)
+VALUES(SH_EBBS_SEQ.NEXTVAL, #{id},#{title},#{content},#{filename},
+			0, 0, SYSDATE)
+</insert>
+
+<select id="getEbbs" parameterType="java.lang.Integer"
+	resultType="sh.model.ShEbbsDto">
+SELECT *
+FROM SH_EBBS
+WHERE SEQ=#{seq}
+</select>
+
+<update id = "updateEbbs" parameterType="sh.model.ShEbbsDto">
+UPDATE SH_EBBS
+SET TITLE=#{title},CONTENT=#{content}, FILENAME=#{filename},
+	WDATE=SYSDATE
+WHERE SEQ=#{seq}
+</update>
+
+
+</mapper>

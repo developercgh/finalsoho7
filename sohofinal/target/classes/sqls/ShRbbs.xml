@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="ShRbbs">
+
+<select id="getRbbsList" resultType="sh.model.ShRbbsDto">
+	SELECT SEQ, ID, TITLE, CONTENT,
+		WDATE, DEL
+	FROM SH_RBBS
+	ORDER BY REF DESC, SEQ ASC
+</select>
+
+<select id="getBbsPagingList" parameterType="sh.model.ShBbsParam"
+	resultType="sh.model.ShRbbsDto">
+	SELECT SEQ, ID, TITLE, CONTENT,
+		WDATE, DEL
+	FROM
+		(SELECT ROW_NUMBER() OVER(ORDER BY WDATE DESC, SEQ ASC)AS RNUM,
+			SEQ, ID, TITLE, CONTENT,
+			WDATE, DEL
+		 FROM SH_RBBS
+		 WHERE 1=1
+		 <if test="s_category != null and s_category != ''
+		 		and s_keyword != null and s_keyword != ''">
+		 	
+		 	<if test="s_category == 'title'">
+		 		AND TITLE LIKE '%'||#{s_keyword}||'%'
+		 	</if>
+		 	<if test="s_category == 'contents'">
+		 		AND CONTENT LIKE '%'||#{s_keyword}||'%'
+		 	</if>
+		 	<if test="s_category == 'writer'">
+		 		AND ID LIKE '%'||#{s_keyword}||'%'
+		 	</if>		 		
+		 </if> 
+		) A
+	WHERE RNUM BETWEEN ${start} AND ${end}	
+</select>
+
+<select id="getRbbsCount"
+	parameterType="sh.model.ShBbsParam"
+	resultType="java.lang.Integer">
+	
+	SELECT NVL(COUNT(*), 0) AS CNT
+	FROM SH_RBBS
+	WHERE 1=1
+	<if test="s_category != null and s_category != ''
+		 		and s_keyword != null and s_keyword != ''">		 	
+	 	<if test="s_category == 'title'">
+	 		AND TITLE LIKE '%'||#{s_keyword}||'%'
+	 	</if>
+	 	<if test="s_category == 'contents'">
+	 		AND CONTENT LIKE '%'||#{s_keyword}||'%'
+	 	</if>
+	 	<if test="s_category == 'writer'">
+	 		AND ID LIKE '%'||#{s_keyword}||'%'
+	 	</if>		 		
+	 </if>  
+</select>
+<insert id="RbbsWrite" parameterType="sh.model.ShRbbsDto">
+	INSERT INTO SH_RBBS
+	(SEQ, ID,
+	TITLE, CONTENT, WDATE, DEL)
+	VALUES(SH_RBBS_SEQ.NEXTVAL, #{id},
+	#{title}, #{content}, SYSDATE, 0)
+</insert>
+	
+<select id="RbbsDetail" parameterType="sh.model.ShRbbsDto" resultType="sh.model.ShRbbsDto">
+	SELECT SEQ,ID,TITLE,CONTENT,WDATE
+	FROM SH_RBBS
+	WHERE SEQ=#{seq}
+</select>	
+
+<select id="RbbsUpList" parameterType="sh.model.ShRbbsDto" resultType="sh.model.ShRbbsDto">
+	SELECT SEQ , TITLE , CONTENT
+	FROM SH_RBBS
+	WHERE SEQ=#{seq}
+</select>
+
+<update id="BbsUpdate" parameterType="sh.model.ShRbbsDto">
+	 UPDATE SH_RBBS SET
+	TITLE=#{title},CONTENT=#{content}
+	WHERE SEQ=#{seq}
+</update>
+
+<update id="RbbsDelete">
+	UPDATE SH_RBBS
+	SET DEL=1
+	WHERE SEQ=#{seq}
+</update>
+
+<select id="asnList" parameterType="sh.model.ShRbbsDto" resultType="sh.model.ShRbbsDto">
+	SELECT * FROM SH_RBBS
+	WHERE SEQ=#{seq}
+</select>
+
+
+
+</mapper>  
+
+
+
+
+
+

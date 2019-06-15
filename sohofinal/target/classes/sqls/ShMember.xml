@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="ShMember">
+<insert id="addmember" parameterType="sh.model.ShMemberDto">
+   INSERT INTO SH_MEMBER(ID, PWD, NAME ,GENDER, RDATE, EMAIL, PNUM, AUTH, DEL)
+   VALUES(#{id}, #{pwd}, #{name}, #{gender}, #{rdate}, #{email}, #{pnum}, 3, 0)   
+</insert>
+
+<select id="login" parameterType="sh.model.ShMemberDto"
+   resultType="sh.model.ShMemberDto">
+   SELECT ID, PWD, NAME ,GENDER, RDATE, EMAIL, PNUM, AUTH, DEL
+   FROM SH_MEMBER
+   WHERE ID=#{id} AND PWD=#{pwd} AND DEL=0
+</select>
+
+<select id="getId" parameterType="sh.model.ShMemberDto"
+   resultType="java.lang.Integer">
+   SELECT NVL(COUNT(*), 0)
+   FROM SH_MEMBER
+   WHERE ID=#{id}   
+</select>
+
+<!-- 회원정보 수정 -->
+<update id="updateMypage" parameterType="sh.model.ShMemberDto">
+      UPDATE SH_MEMBER SET EMAIL=#{email},PNUM=#{pnum}
+      WHERE ID=#{id} AND DEL=0
+</update> 
+<update id="updatePwd" parameterType="sh.model.ShMemberDto">
+      UPDATE SH_MEMBER SET PWD=#{pwd}
+      WHERE ID=#{id} AND DEL=0
+</update> 
+<!-- 회원 탈퇴 -->
+<update id="deleteMypage" parameterType="sh.model.ShMemberDto">
+   UPDATE SH_MEMBER
+   SET DEL=1
+   WHERE ID=#{id}
+</update>
+
+<!-- <delete id="deleteMypage" parameterType="sh.model.ShMemberDto">
+   DELETE FROM SH_MEMBER 
+   WHERE ID=#{id}
+</delete> -->
+
+</mapper>

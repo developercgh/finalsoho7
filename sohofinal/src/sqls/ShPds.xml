@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="ShPds">
+
+<!-- 갤러리 리스트 뿌려주기 -->
+<select id="getPdsList" resultType="sh.model.ShPdsDto"><!-- 결과 반환 -->
+SELECT SEQ, ID, TITLE, CONTENT, FILENAME, READCOUNT, DOWNCOUNT, 
+		TO_CHAR(WDATE, 'YYYY-MM-DD') AS WDATE, DEL
+FROM SH_PDS
+ORDER BY SEQ DESC   <!-- 최신자료를 위로 -->
+</select>
+
+<!-- 게시글 올리기 --><!-- 조회결과 object반환 -->
+<insert id="uploadPds" parameterType="sh.model.ShPdsDto">
+INSERT INTO SH_PDS(SEQ, ID, TITLE, CONTENT, FILENAME, READCOUNT, DOWNCOUNT,
+					TO_CHAR(WDATE, 'YYYY-MM-DD') AS WDATE, DEL)
+VALUES(SH_PDS_SEQ.NEXTVAL, #{id}, #{title}, #{content}, #{filename}, 0, 0, SYSDATE, 0)
+</insert>
+
+<!-- 게시글 seq를 통해 디테일 보기 -->
+<select id="getPds" parameterType="java.lang.Integer" resultType="sh.model.ShPdsDto">
+SELECT SEQ, ID, TITLE, CONTENT, FILENAME, READCOUNT, DOWNCOUNT, 
+		TO_CHAR(WDATE, 'YYYY-MM-DD') AS WDATE, DEL
+FROM SH_PDS
+WHERE SEQ=#{seq}
+</select>
+
+<update id="updatepds" parameterType="sh.model.ShPdsDto">
+UPDATE SH_PDS
+SET TITLE=#{title}, CONTENT=#{content}, FILENAME=#{filename}, WDATE=SYSDATE
+WHERE SEQ=#{seq}
+</update>
+
+<select id="getBbsPagingList" parameterType="sh.model.ShBbsParam"
+   resultType="sh.model.ShPdsDto">
+SELECT SEQ, ID, TITLE, CONTENT, FILENAME, READCOUNT, DOWNCOUNT, 
+		TO_CHAR(WDATE, 'YYYY-MM-DD') AS WDATE, DEL
+FROM<!-- ROW_NUMBER 은 모든 행의 번호를 순차적으로 지정  REF는 역순으로 STEP는 정순으로-->
+   (SELECT ROW_NUMBER() OVER(ORDER BY SEQ DESC)AS RNUM,      <!--   조건이 나올때 무슨순서로 정리할지 ORDER BY에 ???? -->
+      SEQ, ID, TITLE, CONTENT, FILENAME, READCOUNT, DOWNCOUNT, WDATE, DEL
+      FROM SH_PDS
+       WHERE 1=1
+       <if test="s_category != null and s_category != ''
+             and s_keyword != null and s_keyword != ''">
+          
+          <if test="s_category == 'title'">
+             AND TITLE LIKE '%'||#{s_keyword}||'%'
+          </if>
+          <if test="s_category == 'contents'">
+             AND CONTENT LIKE '%'||#{s_keyword}||'%'
+          </if>
+          <if test="s_category == 'writer'">
+             AND ID LIKE '%'||#{s_keyword}||'%'
+          </if>             
+       </if> 
+      ) A
+   WHERE RNUM BETWEEN ${start} AND ${end}   
+</select>
+
+<select id="getBbsCount"
+   parameterType="sh.model.ShBbsParam" resultType="java.lang.Integer">
+
+   SELECT NVL(COUNT(*), 0) AS CNT
+   FROM SH_PDS
+   WHERE 1=1
+   <if test="s_category != null and s_category != ''
+             and s_keyword != null and s_keyword != ''">          
+       <if test="s_category == 'title'">
+          AND TITLE LIKE '%'||#{s_keyword}||'%'
+       </if>
+       <if test="s_category == 'contents'">
+          AND CONTENT LIKE '%'||#{s_keyword}||'%'
+       </if>
+       <if test="s_category == 'writer'">
+          AND ID LIKE '%'||#{s_keyword}||'%'
+       </if>             
+    </if>
+
+</select>
+
+<update id="readcountUpdate" parameterType="sh.model.ShPdsDto">
+   UPDATE SH_PDS
+   SET READCOUNT=READCOUNT+1
+   WHERE SEQ=#{seq}
+</update>
+
+
+<delete id="deleteBbs" parameterType="sh.model.ShPdsDto">
+   DELETE SH_PDS
+   WHERE SEQ=#{seq}
+</delete>
+
+<!-- <insert id="writeBbs" parameterType="sh.model.ShPdsDto">
+   INSERT INTO SH_PDS(SEQ, ID, TITLE, CONTENT, FILENAME, READCOUNT, DOWNCOUNT, WDATE, DEL)
+   VALUES(SH_PDS_SEQ.NEXTVAL, #{id}, (SELECT NVL(MAX(READCOUNT), 0)+1 FROM SH_PDS)
+   , )
+
+</insert> -->
+
+
+</mapper>  

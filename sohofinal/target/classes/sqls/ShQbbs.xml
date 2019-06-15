@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+ <mapper namespace="ShQbbs">
+ 	<select id="getQbbsList" resultType="sh.model.ShQbbsDto">
+ 		SELECT SEQ, ID, TITLE, CONTENT,  READCOUNT, 
+ 				TO_CHAR(WDATE, 'YYYY-MM-DD') AS WDATE,
+ 				PARENT, REF, STEP, DEPTH, REGDATE, DEL
+ 		FROM SH_QBBS
+ 		ORDER BY REF DESC, STEP ASC
+ 	</select>
+ 
+ 	<select id="getQbbsPagingList" parameterType="sh.model.ShQbbsParam"
+ 		resultType="sh.model.ShQbbsDto">
+ 		SELECT SEQ, ID, TITLE, CONTENT,  READCOUNT, 
+				TO_CHAR(WDATE, 'YYYY-MM-DD') AS WDATE,
+ 				PARENT, REF, STEP, DEPTH, REGDATE, DEL
+ 		FROM (SELECT ROW_NUMBER() OVER(ORDER BY REF DESC, STEP ASC)AS RNUM,
+				SEQ, ID, TITLE, CONTENT,  READCOUNT, WDATE,
+ 				PARENT, REF, STEP, DEPTH, REGDATE, DEL
+		 FROM SH_QBBS
+		 WHERE 1=1
+		 <if test="q_category != null and q_category != ''
+		 		and q_keyword != null and q_keyword != ''">
+		 	
+		 	<if test="q_category == 'title'">
+		 		AND TITLE LIKE '%'||#{q_keyword}||'%'
+		 	</if>
+		 	<if test="q_category == 'contents'">
+		 		AND CONTENT LIKE '%'||#{q_keyword}||'%'
+		 	</if>
+		 	<if test="q_category == 'writer'">
+		 		AND ID LIKE '%'||#{q_keyword}||'%'
+		 	</if>		 		
+		 </if> 
+		) A
+	WHERE RNUM BETWEEN ${start} AND ${end}	
+</select>
+
+<select id="getQbbsCount" parameterType="sh.model.ShQbbsParam" resultType="java.lang.Integer">
+	
+	SELECT NVL(COUNT(*), 0) AS CNT
+	FROM SH_QBBS
+	WHERE 1=1
+	<if test="q_category != null and q_category != ''
+		 		and q_keyword != null and q_keyword != ''">		 	
+	 	<if test="q_category == 'title'">
+	 		AND TITLE LIKE '%'||#{q_keyword}||'%'
+	 	</if>
+	 	<if test="q_category == 'contents'">
+	 		AND CONTENT LIKE '%'||#{q_keyword}||'%'
+	 	</if>
+	 	<if test="q_category == 'writer'">
+	 		AND ID=#{q_keyword}
+	 	</if>		 		
+	 </if>  
+</select>
+
+<insert id="Qbbswrite" parameterType="sh.model.ShQbbsDto">
+			INSERT INTO SH_QBBS 
+				   (SEQ, ID, TITLE, CONTENT, READCOUNT, WDATE,
+ 					PARENT, REF, STEP, DEPTH, REGDATE, DEL)
+			VALUES(SH_QBBS_SEQ.NEXTVAL, #{id}, #{title}, #{content}, 0, SYSDATE, 0,
+				   (SELECT NVL(MAX(REF), 0)+1 FROM SH_QBBS), 0, 0, SYSDATE, 0)
+					
+</insert>
+
+<select id="Qbbsdetail" parameterType="sh.model.ShQbbsDto" resultType="sh.model.ShQbbsDto">
+				SELECT	SEQ, ID, TITLE, CONTENT, READCOUNT, 
+						TO_CHAR(WDATE, 'YYYY-MM-DD') AS WDATE,
+						PARENT, REF, STEP, DEPTH, REGDATE, DEL
+		   	    FROM SH_QBBS 
+				WHERE SEQ=#{seq} 
+</select>
+
+<update id="Qbbsupdate" parameterType="sh.model.ShQbbsDto">
+				UPDATE SH_QBBS SET 
+				TITLE=#{title}, CONTENT=#{content}
+				WHERE SEQ=#{seq}
+</update>
+
+<update id="Qbbsdelete" parameterType="sh.model.ShQbbsDto">
+					UPDATE SH_QBBS
+					SET DEL=1
+					WHERE SEQ=#{seq}
+</update>
+
+<update id="Qreadcount" parameterType="sh.model.ShQbbsDto">
+				UPDATE SH_QBBS SET 
+				READCOUNT=READCOUNT+1
+				WHERE SEQ=#{seq}
+</update>
+
+<update id="QanswerUpdate" parameterType="sh.model.ShQbbsDto">
+		UPDATE SH_QBBS
+		SET STEP=STEP+1
+		WHERE REF=(SELECT REF FROM SH_QBBS WHERE SEQ=#{seq})
+		AND STEP>(SELECT STEP FROM SH_QBBS WHERE SEQ=#{seq})
+</update>				
+
+<insert id="QanswerInsert" parameterType="sh.model.ShQbbsDto">
+		
+		INSERT INTO SH_QBBS 
+				(SEQ, ID, TITLE, CONTENT, READCOUNT, WDATE,
+ 				PARENT, REF, STEP, DEPTH, REGDATE, DEL)
+				VALUES(SH_QBBS_SEQ.NEXTVAL, #{id}, #{title}, 
+				#{content}, 0, SYSDATE, #{parent},
+				(SELECT REF FROM SH_QBBS WHERE SEQ=#{seq}),
+				(SELECT STEP FROM SH_QBBS WHERE SEQ=#{seq}) + 1,
+				(SELECT DEPTH FROM SH_QBBS WHERE SEQ=#{seq}) + 1,
+				SYSDATE, 0)
+</insert>
+
+
+</mapper>  

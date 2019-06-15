@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="ShBooking">
+
+<select id="getBookinglist" resultType="sh.model.ShBookingDto">
+	SELECT SEQ, ID, NAME, ROOMNAME, CONTENT, COUNTNUM, TO_CHAR(SDATE, 'YYYY-MM-DD') AS SDATE,
+	TO_CHAR(EDATE, 'YYYY-MM-DD') AS EDATE, PNUM, PRICE, CHECKNUM
+	FROM SH_BOOKING
+	ORDER BY SEQ DESC
+</select>
+
+<select id="getBkPaginglist" parameterType="sh.model.ShBbsParam"
+		resultType="sh.model.ShBookingDto">
+	SELECT SEQ, ID, NAME, ROOMNAME, CONTENT, COUNTNUM, TO_CHAR(SDATE, 'YYYY-MM-DD') AS SDATE,
+	TO_CHAR(EDATE, 'YYYY-MM-DD') AS EDATE, PNUM, PRICE, CHECKNUM
+	FROM (SELECT ROW_NUMBER() OVER(ORDER BY SEQ DESC)AS RNUM,
+			SEQ, ID, NAME, ROOMNAME, CONTENT, COUNTNUM, SDATE, EDATE, PNUM, PRICE, CHECKNUM
+		FROM SH_BOOKING
+		WHERE 1=1
+		<if test="s_category != null and s_category != ''
+			and s_keyword != null and s_keyword != ''">
+			
+			<if test="s_category == 'id'">
+				AND ID LIKE '%'||#{s_keyword}||'%'
+			</if>
+			
+			<if test="s_category == 'roomname'">
+				AND ROOMNAME LIKE '%'||#{s_keyword}||'%'
+			</if>
+		
+		</if>
+		) A
+	WHERE RNUM BETWEEN ${start} AND ${end}
+</select>
+
+<select id="getBklistCount" parameterType="sh.model.ShBbsParam"
+		resultType="java.lang.Integer">
+	SELECT NVL(COUNT(*), 0) AS CNT
+	FROM SH_BOOKING
+	WHERE 1=1
+	<if test="s_category != null and s_category != ''
+			and s_keyword != null and s_keyword != ''">
+			
+			<if test="s_category == 'id'">
+				AND ID LIKE '%'||#{s_keyword}||'%'
+			</if>
+			
+			<if test="s_category == 'roomname'">
+				AND ROOMNAME LIKE '%'||#{s_keyword}||'%'
+			</if>
+	
+	</if>
+</select>
+
+<insert id="Bookingwrite" parameterType="sh.model.ShBookingDto">
+	INSERT INTO SH_BOOKING(SEQ, ID, NAME, ROOMNAME, CONTENT, COUNTNUM, SDATE,
+	EDATE, PNUM, PRICE, CHECKNUM)
+	VALUES(SH_BOOKING_SEQ.NEXTVAL, #{id}, #{name}, #{roomname}, #{content}, #{countnum}, #{sdate}, #{edate}, 
+			#{pnum}, #{price}, #{checknum})
+</insert>
+
+<select id="Bookingdetail" parameterType="sh.model.ShBookingDto" 
+		resultType="sh.model.ShBookingDto">
+	SELECT SEQ, ID, NAME, ROOMNAME, CONTENT, COUNTNUM,TO_CHAR(SDATE, 'YYYY-MM-DD') AS SDATE,
+	TO_CHAR(EDATE, 'YYYY-MM-DD') AS EDATE, PNUM, PRICE, CHECKNUM
+	FROM SH_BOOKING
+	WHERE SEQ=#{seq}
+</select>
+
+
+<update id="BookSucess" parameterType="java.lang.Integer">
+					UPDATE SH_BOOKING
+					SET CHECKNUM=1
+					WHERE SEQ=#{seq}
+</update>
+
+<update id="BookCancel" parameterType="java.lang.Integer">
+					UPDATE SH_BOOKING
+					SET CHECKNUM=2
+					WHERE SEQ=#{seq}
+</update>
+
+<select id="userBooking" parameterType="sh.model.ShMemberDto" resultType="sh.model.ShBookingDto">
+SELECT *
+FROM SH_BOOKING
+WHERE ID = #{id}
+</select>
+
+
+
+
+</mapper>

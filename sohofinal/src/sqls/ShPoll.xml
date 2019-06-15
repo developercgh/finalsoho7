@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ShPoll">
+
+<!-- 모든 투표의 정보 -->
+<select id="getPollAllList" resultType="sh.model.ShPollDto">
+SELECT POLLID, ID, QUESTION, SDATE, EDATE, ITEMCOUNT,
+	POLLTOTAL, WDATE
+FROM SH_POLL
+ORDER BY SDATE DESC
+</select>
+
+<!-- 투표를 했는지 확인 -->
+<select id="isVote" parameterType="sh.model.ShVoter" resultType="java.lang.Integer">
+SELECT COUNT(*)		<!-- 무조건 한번만 투표를 하므로 했담녀 1로 반환 될거임 -->
+FROM SH_VOTER
+WHERE POLLID=#{pollid} AND ID=#{id}		<!-- 질문한거의 아이디가 있냐? -->
+</select>
+
+<!-- 투표만들기 -->
+<!-- Poll(투표항목): 좋아하는 과일은? -->
+<insert id="makePoll" parameterType="sh.model.ShPollDto">
+INSERT INTO SH_POLL
+	(POLLID, ID, QUESTION, SDATE, EDATE, ITEMCOUNT, POLLTOTAL, WDATE)
+VALUES
+	(SH_POLL_SEQ.NEXTVAL, #{id}, #{question}, #{sdate}, #{edate}, #{itemcount}, 0 , SYSDATE)
+</insert>
+
+<!-- PollSub(투표보기): 사고, 배, 바나나 -->
+<insert id="makePollSub" parameterType="sh.model.ShPollSubDto">
+INSERT INTO SH_POLLSUB(POLLSUBID, POLLID, ANSWER, ACOUNT)
+VALUES(SH_POLLSUB_SEQ.NEXTVAL,(SELECT NVL(MAX(POLLID), 0) FROM SH_POLL),	<!-- nvl안에 있는 거는 유효성 검사로 질문이 있는지 여부확인 -->
+			#{answer}, 0)	
+</insert>
+
+
+<!-- 투표하기 -->
+<!-- 투표항목 -->
+<select id="getPoll" parameterType="sh.model.ShPollDto"
+	resultType="sh.model.ShPollDto">
+SELECT POLLID, ID, QUESTION, SDATE, EDATE, ITEMCOUNT,
+	POLLTOTAL, WDATE
+FROM SH_POLL
+WHERE POLLID=#{pollid}
+</select>
+
+<!-- 투표보기들 -->
+<select id="getPollSubList"
+	parameterType="sh.model.ShPollDto"
+	resultType="sh.model.ShPollSubDto">
+SELECT POLLSUBID, POLLID, ANSWER, ACOUNT
+FROM SH_POLLSUB
+WHERE POLLID=#{pollid}		<!-- 질문이 몬지를 알아야 하기 때문에 반드시 있어야함 -->
+</select>
+
+<!-- 투표자 등록 -->
+<insert id="pollingVote" parameterType="sh.model.ShVoter">
+INSERT INTO SH_VOTER(VOTERID, POLLID, POLLSUBID, ID, WDATE)
+VALUES(SH_VOTER_SEQ.NEXTVAL, #{pollid}, #{pollsubid}, #{id}, SYSDATE)
+</insert>
+
+<!-- 어떤 항목에 투표를 했는지 카운터 -->
+<update id="pollingPoll" parameterType="sh.model.ShVoter">
+UPDATE SH_POLL
+SET POLLTOTAL=POLLTOTAL+1
+WHERE POLLID=#{pollid}
+</update>
+
+<!-- 어떤 보기에 투표를 했는지 카운터 -->
+<update id="pollingSub" parameterType="sh.model.ShVoter">
+UPDATE SH_POLLSUB
+SET ACOUNT=ACOUNT+1
+WHERE POLLSUBID=#{pollsubid} AND POLLID=#{pollid}
+</update>
+
+</mapper>  
